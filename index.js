@@ -1,9 +1,11 @@
 let postsArr = []
 const titleInput = document.getElementById("post-title")
 const bodyInput = document.getElementById("post-body")
+const form = document.getElementById("new-post")
 
 
 function renderPosts (){
+  
     let html = ""
     for (let post of postsArr) {
         html += `
@@ -23,10 +25,12 @@ fetch("https://apis.scrimba.com/jsonplaceholder/posts")
         renderPosts()
     })
 
-document.getElementById("new-post").addEventListener("submit", function(e) {
+form.addEventListener("submit", function(e) {
     e.preventDefault()
     const postTitle = titleInput.value
     const postBody = bodyInput.value
+    if(!postTitle || !postBody) return alert("Please fill out both fields"  )
+
     const data = {
         title: postTitle,
         body: postBody
@@ -43,15 +47,12 @@ document.getElementById("new-post").addEventListener("submit", function(e) {
     
     fetch("https://apis.scrimba.com/jsonplaceholder/posts", options)
         .then(res => res.json())
-        .then(data => 
-            postsArr.unshift(data),
+        .then(data => {
+            postsArr.unshift(data)
+            renderPosts()
             
             //clear the input fields
-            titleInput.value = "",
-            bodyInput.value = "",
-            renderPosts (),
-
-                
-         )
+            form.reset()
+       })
         
 })
